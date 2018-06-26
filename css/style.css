@@ -3,6 +3,11 @@ body{
 		box-sizing: border-box;
 	}
 
+h1{
+	font-size: 50px;
+	color: #1C2331;
+	font-weight: 2px;
+}
 }
 .row{
 	display: flex;
@@ -12,7 +17,6 @@ body{
 	flex: 50%
 	padding: 10px;
 	height: 500px;
-	background-color: #ede7fb;
 	width: 50%;
 	padding-top: 20px;
 	padding-left: 20px;
@@ -36,6 +40,8 @@ body{
 /* registration form styles */
 .register{
 	padding: 16px;
+	padding-left: 400px;
+	padding-right: 300px;
 }
 
 input[type=text], input[type=password]{
@@ -94,6 +100,5 @@ button{
 .commentbtn{
 	background-color: #0099cc;
 	color: #ffffff;
-	font-size: 16px;
-	
+
 }
