@@ -33,7 +33,15 @@ class User():
         content = raw_input("Enter Content Here")
         print" "
 
-        
+        print"Would do like to comment on your post"
+        print"**************************************"
+
+    def post_comment(self):
+        comment = raw_input("Post Your reviews here!")
+        print"***************************************"
+
+
+
     
 
 
