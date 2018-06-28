@@ -1,7 +1,6 @@
 class User():
     def __init__(self):
         self.databese={}
-        
     #enables users to create accounts
     def register(self):
         print('*****************************')
@@ -10,9 +9,13 @@ class User():
         full_name = input('Enter Your Names ')
         username  = input('Enter Your Username ')
         email     = input('Enter Your Email  ')
-        password  = input('Enter Your password ')
-        confirm_password = input('Confirm Your passward ')
-        self.reg(full_name,username,email,password,confirm_password)
+        if email in self.databese:
+            print('email is already taken')
+        else:
+
+            password  = input('Enter Your password ')
+            confirm_password = input('Confirm Your passward ')
+            self.reg(full_name,username,email,password,confirm_password)
 
     def reg(self,full_name,username,email,password,confirm_password):
         self.databese.update({username:password})
@@ -55,8 +58,16 @@ class User():
         comment = input('Post Your reviews here! ')
         print('***************************************')
 
-system = User()
-system.register()
-system.login()
-system.post()
-system.post_comment()
+status = ''  
+status = User()
+status = input("Are you registered user? y/n? Press q to quit")
+if status == "y":
+    status.register()
+elif status == "n":
+    status.login()
+
+#system = User()
+#system.register()
+#system.login()
+#system.post()
+#system.post_comment()
