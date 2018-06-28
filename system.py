@@ -17,6 +17,8 @@ class User():
         print"Would do you like to sigin?"
         print " "
         print"*********************************"
+        
+        #enable users to Signin
     def login(self):
         username = raw_input("Enter Your Username")
         password = raw_input("Enter Your Password")
@@ -24,5 +26,14 @@ class User():
         print"Welcome %s You successfully logged in" %username
         print " "
         print"***********************************"
-   
+        print"You go a head and post Your content"
+        #enable user to post content
+    def post(self):
+        title = raw_input("Enter Title")
+        content = raw_input("Enter Content Here")
+        print" "
+
+        
+    
+
 
