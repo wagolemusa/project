@@ -35,11 +35,17 @@ class User():
 
         print"Would do like to comment on your post"
         print"**************************************"
-
+        
+        #enables other people to post there reviews
     def post_comment(self):
         comment = raw_input("Post Your reviews here!")
         print"***************************************"
 
+system = User()
+system.register()
+system.login()
+system.post()
+system.post_comment()
 
 
     
