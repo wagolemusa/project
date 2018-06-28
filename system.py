@@ -13,4 +13,16 @@ class User():
 
         print"You are successfully Signup"
         print " " 
-        
+
+        print"Would do you like to sigin?"
+        print " "
+        print"*********************************"
+    def login(self):
+        username = raw_input("Enter Your Username")
+        password = raw_input("Enter Your Password")
+        print " "
+        print"Welcome %s You successfully logged in" %username
+        print " "
+        print"***********************************"
+   
+
