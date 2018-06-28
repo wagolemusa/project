@@ -26,15 +26,16 @@ choice = 0
 while loop == 1:
     choice == user()
     if choice == 1:
-        register(input("full_name"),input("username"),input("email"),input("passwors"),input("confrim_password"))
+        register(raw_input("full_name"),input("username"),input("email"),input("passwors"),input("confrim_password"))
     elif choice == 2:
-        login(input("email"),input("password"))
+        login(raw_input("email"),input("password"))
     elif choice == 3:
-        post(input("title"), input("content"))
+        post(raw_input("title"), input("content"))
     elif choice == 4:
-        comment(input(comment))
+        comment(raw_input(comment))
 
     elif choice == 5:
-        loop == 0
-    print "Thanks you for using our System"
+        loop = 0
+
+        print "Thanks you for using our System"
     
