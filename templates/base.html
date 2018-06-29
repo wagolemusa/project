@@ -2,7 +2,9 @@
 <html>
 <head>
 	<title>{% block title %}{% endblock %}</title>
-	<link rel="stylesheet" type="text/css" href="css/style.css">
+	
+	<link href="static/css/style.css" rel="stylesheet">
+
 </head>
 <div class="navbar">
 <a href="/">Home</a>
@@ -12,6 +14,8 @@
 </div>
 <body>
 
-
+<div class="container">
+{% block content %} {% endblock %}
+</div>
 </body>
 </html>
