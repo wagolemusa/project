@@ -1,10 +1,14 @@
 from flask import Flask, jsonify, render_template, session, request, url_for, flash
 
-from functools import wraps
+from register import Registers
+from comment import Post_comment
 
 app = Flask(__name__)
 
 app.secrect_key = "my precious"
+
+Registers = Registers()
+Post_comment = Post_comment()
 
 
 # Validates logged in user with session
@@ -18,8 +22,6 @@ def login_required(f):
 			return redirect(url_for('login'))
 	return wrap
 
-
-
 @app.route('/')
 def home():
 	return render_template('index.html')
@@ -30,7 +32,20 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+	error = None
+	if request.method == 'POST':
+		if request.form['username'] != 'refuge' or request.form['password'] != 'wise':
+			error  = 'Invalid credentials please try agian.'
+		else:
+			session['logged_in'] = True
+			flask('You are just logged in')
+			return redirect(url_for('post'))
+			return render_template('login.html', error=error)
+    
+@app.route('/user_details')
+def view_register():
+	return render_template('user_details.html', registers = Registers)
+
 
 @app.route('/post', methods=['GET', 'POST'])
 def post():

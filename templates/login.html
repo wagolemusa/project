@@ -9,14 +9,14 @@
 <h1>Login</h1>
 </center>
 <div class="register">
-<form action="">
-<label for="email"><b>Email</b></label><br/>
-<input type="text" placeholder="Email" name="email" required=""><br/>
+<form action="" method="post">
+<label for="username"><b>Username</b></label><br/>
+<input type="text" placeholder="Username" name="username" value="{{request.form.username}}"><br/>
 
 <label for="password"><b>password</b></label><br/>
-<input type="password" placeholder="Password" name="password" required=""><br/>
+<input type="password" placeholder="Password" name="password" value="{{request.form.password}}"><br/>
 
-<button type="submit" class="loginbtn">Signin</button>
+<input type="submit" class="loginbtn" value="Login">
 </form>
 </div>
 

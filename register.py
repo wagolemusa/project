@@ -1,20 +1,23 @@
-def Register_data():
-	reg = [
-			{
-				'user_id': 1,
-    		'full_name':'refuge waie',
+def Registers():
+	registers = [
+		{
+			'user_id': 1,
+    		'full_name':'refuge wise',
     		'username': 'refuge',
     		'email':  'wise@gmail.com',
-    		'password': '123456',
+    		'password': 'hh23456',
     		'confirm_password':'123456'
-			},
-			{
-				'user_id':2,
+
+		},
+		{
+			'user_id':2,
     		'full_name':'opio wafula',
     		'username' : 'opio',
-    		'email': 'wafula@gmail.com'
+    		'email': 'wafula@gmail.com',
     		'password':'me1223',
     		'confirm_password':'me1223'
-			}
-
+		}
 	]
+	return registers
+	
+	

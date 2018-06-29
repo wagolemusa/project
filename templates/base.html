@@ -11,11 +11,22 @@
 <a href="/register">Register</a>
 <a href="/login">Login</a>
 <a href="/post">Post</a>
+<a href="/user_details">View</a>
 </div>
 <body>
 
 <div class="container">
 {% block content %} {% endblock %}
+
+{% if error %}
+	<p class="error"><strong>Error:</strong>{{ error }}</p>
+
+{% endif %}
+
+{% for message in get_flashed_messages() %}
+	{{ message }}
+{% endfor %}
+
 </div>
 </body>
 </html>
