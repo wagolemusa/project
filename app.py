@@ -7,6 +7,19 @@ app = Flask(__name__)
 app.secrect_key = "my precious"
 
 
+# Validates logged in user with session
+def login_required(f):
+	@wraps(f)
+	def warp(*args, **kwargs):
+		if 'logged_in' in session:
+			return f(*args, **kwargs)
+		else:
+			flash('You need to Login first')
+			return redirect(url_for('login'))
+	return wrap
+
+
+
 @app.route('/')
 def home():
 	return render_template('index.html')
