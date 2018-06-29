@@ -1,16 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Post</title>
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-</head>
-<div class="navbar">
-<a href="index.html">Home</a>
-<a href="register.html">Register</a>
-<a href="login.html">Login</a>
-<a href="post.html">Post</a>
-</div>
+{% block title %} Post{% endblock %}
+{% extends "base.html" %}
 
+{% block content %} 
 <div class="post">
 <h1>Post Your Content Here</h1>
 
@@ -23,7 +14,5 @@
 <button type="submit" class="postbtn" name="post">Post</button>
 </form>
 </div>
-<body>
 
-</body>
-</html>
+{% endblock %}
