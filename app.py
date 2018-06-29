@@ -1,12 +1,20 @@
 from flask import Flask,jsonify,request,session
+from register import Register_data
+from post  import  Post_content
+from  comment import Post_comment
 
 from flask_httpauth import HTTPBasicAuth
 auth = HTTPBasicAuth()
 
 app = Flask(__name__)
 
-database = [{}]
+Register_data = Register_data()
+Post_content = Post_content()
+Post_content = Post_content()
 
+@app.route('/')
+def home():
+    return "Register or Login"
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -38,7 +46,7 @@ def login():
         error = 'Invalid credentials. Please try again.'
     else:
         session['logged_in'] = True
-        flask('You are just logged in')
+        flash('You are just logged in')
 
 
 @app.route('/post', methods=['POST'])
