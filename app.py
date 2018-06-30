@@ -12,6 +12,10 @@ app.secret_key = "my precious"
 Registers = Registers()
 Post_comment = Post_comment()
 
+data = []
+register_info {}
+comment {}
+
 
 # Validates logged in user with session
 def login_required(f):
@@ -43,7 +47,18 @@ class RegisterForm(Form):
 #User Regisetr
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template('register.html')
+	form = RegisterForm(request.form)
+	if request.methods == 'POST' and form.validete():
+		register_info['full_name'] = request.form.post('full_name')
+		register_info['username'] = request.form.post('username')
+		register_info['email'] = request.form.post('email')
+		register_info['password'] = request.form.post('password')
+		register_info['confirm_password'] = request.form.post('confirm_password')
+		data.append(register_info)
+		flash ('successfully Registerd')
+		print('data')
+  return render_template('register.html')
+
 
 #User login
 @app.route('/login', methods=['GET', 'POST'])
@@ -58,17 +73,45 @@ def login():
 			return redirect(url_for('post'))
 	return render_template('login.html', error=error)
 
-#User Details    
+
+ 
 @app.route('/user_details', )
+@login_required
+"""
+#User Details   
+"""
 def view_register():
 	return render_template('user_details.html', registers = Registers)
 
 
-#Post comment
-@app.route('/post', methods=['GET', 'POST'])
+
+@app.route('/comment', methods=['GET', 'POST'])
+@login_required
 def post():
+"""
+Post Comment
+"""
+	if request.method == 'POST':
+		comment['user_id'] = len(users)+1
+		comment['comment'] = request.post('comment')
 	return render_template('post.html')
+
+
+@app.route('/query_comment')
+@login_required
+"""
+Query Comments
+"""
+def query_comment():
+	return render_template('query_comment', comments = Post_comment)
+
+
 	
+@app.route('/logout')
+@login_required
+def logout():
+	session.pop('logged_in', None)
+	return redirect(url_for('login'))
 
 if __name__ == '__main__':
 	app.run()
