@@ -5,7 +5,7 @@ def Registers():
     		'full_name':'refuge wise',
     		'username': 'refuge',
     		'email':  'wise@gmail.com',
-    		'password': 'hh23456',
+    		'password': 'wise@1',
     		'confirm_password':'123456'
 
 		},
