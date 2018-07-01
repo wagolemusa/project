@@ -1,4 +1,4 @@
-def Post_comment():
+def Post_comments():
 	comments = [
 			{
 			'user_id': 1,

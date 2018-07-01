@@ -2,14 +2,18 @@
 {% extends 'base.html' %}
 
 {% block title %} {% endblock %}
+
+{% block content %}
 <br/><b/><br/><br/><br/>
 <div class="details">
 {% for register in registers %}
 
 {{ register.username }}
 {{ register.full_name }}
+
 </div>
 {% endfor %}
 
+{% endblock %}
 
 
