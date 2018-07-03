@@ -1,7 +1,7 @@
 def Registers():
 	registers = [
 		{
-			'user_id': 1,
+				'user_id': 1,
     		'full_name':'refuge wise',
     		'username': 'refuge',
     		'email':  'wise@gmail.com',
@@ -10,7 +10,7 @@ def Registers():
 
 		},
 		{
-			'user_id':2,
+				'user_id':2,
     		'full_name':'opio wafula',
     		'username' : 'opio',
     		'email': 'wafula@gmail.com',
