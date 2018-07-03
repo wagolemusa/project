@@ -71,6 +71,12 @@ comments = [
 #	return jsonify({'message': 'Wrong username and password'})
 
 
+@auth.get_password
+def get_password(username):
+    if username == 'refuge':
+        return 'wise@1'
+    return None
+
 #home route
 @app.route('/', methods=['GET'])
 def index():
@@ -107,13 +113,11 @@ def veiw_comment():
 
 # User Account
 @app.route('/api/v1/account', methods=['GET'])
-@login_required
 def user_account():
 	return jsonify({'registers': registers })
 
 #User Logout
 @app.route('/logout')
-@login_required
 def logout():
 	session.pop('logged_in', None)
 	return redirect(url_for('login'))
