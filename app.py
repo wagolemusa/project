@@ -8,15 +8,12 @@ from flask_httpauth import HTTPBasicAuth
 auth = HTTPBasicAuth()
 
 
-from register import Registers
-from comment import Post_comments
+
 
 app = Flask(__name__)
 
 app.secret_key = "refuge wise"
 
-Registers = Registers()
-Post_comments = Post_comments()
 
 registers = [
 		{
@@ -37,36 +34,45 @@ registers = [
     		'confirm_password':'me1223'
 		}
 ]
-
-comments = {
-				
+comments = [
+			{
 			'user_id': 1,
 			'post_id': 1,
-			'post' : 'That is not True'	
-}
+			'post' : 'That is not True'
+		}
+]
 
 
 
 
 # Validates logged in user with session
 #def login_required(f):
-	#@wraps(f)
-	#def wrap(*args, **kwargs):
+#	@wraps(f)
+#	def wrap(*args, **kwargs):
 #		if 'logged_in' in session:
 #			return f(*args, **kwargs)
 #		else:
 #			flash('You need to login first.')
-#			return redirect(url_for('login'))
+#			return redirect(url_for('/api/auth/login'))
 #	return wrap
-@auth.get_password
-def get_password(username):
-    if username == 'refuge':
-        return 'python'
-    return None
+
+
+#User login
+#@app.route('/api/auth/login', methods=['GET', 'POST'])
+#def login():
+#	error = None
+#	if request.method == 'POST':
+#		if request.form['username'] != 'refuge' or request.form['password'] != 'wise@1':
+#			error = 'Invalid credentials. Please try agian.'
+#		else:
+#			session['logged_in'] = True
+#			flash('You were just logged in!')
+#			return redirect(url_for('/'))
+#	return jsonify({'message': 'Wrong username and password'})
+
 
 #home route
 @app.route('/', methods=['GET'])
-@auth.login_required
 def index():
 	return jsonify({'message': 'Welcome to our system'})
 
@@ -74,7 +80,7 @@ def index():
 @app.route('/api/auth/register', methods=['GET', 'POST'])
 def register():
 	user = {
-		#'user_id': registers[-1]['user_id'] + 1,
+		'user_id': registers[-1]['user_id'] + 1,
 		'full_name': request.json['full_name'],
 		'username' :request.json['username'],
 		'email' : request.json['email'],
@@ -101,12 +107,13 @@ def veiw_comment():
 
 # User Account
 @app.route('/api/v1/account', methods=['GET'])
+@login_required
 def user_account():
 	return jsonify({'registers': registers })
 
 #User Logout
 @app.route('/logout')
-#@login_required
+@login_required
 def logout():
 	session.pop('logged_in', None)
 	return redirect(url_for('login'))
