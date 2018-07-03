@@ -83,18 +83,15 @@ def index():
 	return jsonify({'message': 'Welcome to our system'})
 
 #User Register 
-@app.route('/api/auth/register', methods=['GET', 'POST'])
+@app.route('/api/auth/register',  methods=['POST'])
 def register():
-	user = {
-		'user_id': registers[-1]['user_id'] + 1,
-		'full_name': request.json['full_name'],
-		'username' :request.json['username'],
-		'email' : request.json['email'],
-		'password' :request.json['password'],
-		'confirm_password': request.json['confirm_password']
-	}
-	registers.append(user)
-	return jsonify({'user': user}),201
+		full_name = request.form['full_name']
+		username = request.form['username']
+		email = request.form['email']
+		password = request.form['password']
+		confirm_password = request.form['confirm_password']
+		registers.append(full_name,username,email,password,confirm_password)
+		return jsonify({'user': user}),201
 
 # Post comment
 @app.route('/api/v1/post-comment', methods=['GET', 'POST'])
