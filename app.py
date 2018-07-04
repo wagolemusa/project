@@ -46,36 +46,16 @@ comments = [
 
 
 # Validates logged in user with session
-#def login_required(f):
-#	@wraps(f)
-#	def wrap(*args, **kwargs):
-#		if 'logged_in' in session:
-#			return f(*args, **kwargs)
-#		else:
-#			flash('You need to login first.')
-#			return redirect(url_for('/api/auth/login'))
-#	return wrap
+def login_required(f):
+	@wraps(f)
+	def wrap(*args, **kwargs):
+		if 'logged_in' in session:
+			return f(*args, **kwargs)
+		else:
+			flash('You need to login first.')
+			return redirect(url_for('/api/auth/login'))
+	return wrap
 
-
-#User login
-#@app.route('/api/auth/login', methods=['GET', 'POST'])
-#def login():
-#	error = None
-#	if request.method == 'POST':
-#		if request.form['username'] != 'refuge' or request.form['password'] != 'wise@1':
-#			error = 'Invalid credentials. Please try agian.'
-#		else:
-#			session['logged_in'] = True
-#			flash('You were just logged in!')
-#			return redirect(url_for('/'))
-#	return jsonify({'message': 'Wrong username and password'})
-
-
-@auth.get_password
-def get_password(username):
-    if username == 'refuge':
-        return 'wise@1'
-    return None
 
 #home route
 @app.route('/', methods=['GET'])
@@ -85,24 +65,51 @@ def index():
 #User Register 
 @app.route('/api/auth/register',  methods=['POST'])
 def register():
+
+		user_id  =  registers[-1]['user_id'] + 1
 		full_name = request.form['full_name']
 		username = request.form['username']
 		email = request.form['email']
 		password = request.form['password']
 		confirm_password = request.form['confirm_password']
-		registers.append(full_name,username,email,password,confirm_password)
+		registers.append(user)
 		return jsonify({'message': 'Successfully Registered'}),201
+
+#User login
+@app.route('/api/auth/login', methods=['GET', 'POST'])
+def login():
+	error = None
+	if request.method == 'POST':
+
+		username = request.form['username']
+		password = request.form['password']
+		if useranme in registers:
+			if password == registers[username["password"]]:
+				session["logged_in"] = True
+				return jsonify({"message": "Successfully Logged In"})
+		return jsonify({"message": "Wrong Username and password"})
 
 # Post comment
 @app.route('/api/v1/post-comment', methods=['GET', 'POST'])
 def post_comment():
 	comm = {
-		'post_id': comm[-1]['post_id'] + 1,
-		'user_id': request.json.get['user_id'],
-		'comment' : request.json['comment']
+		'post_id': comments[-1]['post_id'] + 1,
+		'user_id': request.form['user_id'],
+		'comment' : request.form['comment']
 	}
 	comments.append(comm)
 	return jsonify({'comm': comm })
+
+#deleting comments
+@app.route('/api/v1/remove_post/<int:post_id>', methods=['DELETE'])
+def delete_comment():
+	comm = [comm for comm in comments if comm['post_id']]
+	if len(comm) == 0:
+		abort(404)
+	comments.remove(comm[0])
+	return jsonify({'message': 'Comment successfully deleted'})
+
+
 
 @app.route('/api/v1/view_comment', methods=['GET'])
 def veiw_comment():
@@ -112,6 +119,8 @@ def veiw_comment():
 @app.route('/api/v1/account', methods=['GET'])
 def user_account():
 	return jsonify({'registers': registers })
+
+
 
 #User Logout
 @app.route('/logout')
