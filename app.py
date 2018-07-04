@@ -91,7 +91,7 @@ def register():
 		password = request.form['password']
 		confirm_password = request.form['confirm_password']
 		registers.append(full_name,username,email,password,confirm_password)
-		return jsonify({'user': user}),201
+		return jsonify({'message': 'Successfully Registered'}),201
 
 # Post comment
 @app.route('/api/v1/post-comment', methods=['GET', 'POST'])
