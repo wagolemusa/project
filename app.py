@@ -84,7 +84,7 @@ def login():
 
 		username = request.form['username']
 		password = request.form['password']
-		if useranme in registers:
+		if username in registers:
 			if password == registers[username["password"]]:
 				session["logged_in"] = True
 				return jsonify({"message": "Successfully Logged In"})
@@ -102,7 +102,7 @@ def post_comment():
 	return jsonify({'comm': comm })
 
 #deleting comments
-@app.route('/api/v1/remove_post/<int:_id>', methods=['DELETE'])
+@app.route('/api/v1/remove_post/<int:comments_id>', methods=['DELETE'])
 def delete_comment():
 	comm = [comm for comm in comments if comm['post_id']]
 	if len(comm) == 0:
