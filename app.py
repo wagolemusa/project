@@ -65,15 +65,16 @@ def index():
 #User Register 
 @app.route('/api/auth/register',  methods=['POST'])
 def register():
-
-		user_id  =  registers[-1]['user_id'] + 1
-		full_name = request.form['full_name']
-		username = request.form['username']
-		email = request.form['email']
-		password = request.form['password']
-		confirm_password = request.form['confirm_password']
-		registers.append(user)
-		return jsonify({'message': 'Successfully Registered'}),201
+	users={
+	'user_id': registers[-1]['user_id'] + 1,
+	'full_name' : request.form['full_name'],
+	'username': request.form['username'],
+	'email' :request.form['email'],
+	'password': request.form['password'],
+	'confirm_password' :request.form['confirm_password']	
+	}
+	registers.append(users)
+	return jsonify({'message': 'Successfully Registered'}),201
 
 #User login
 @app.route('/api/auth/login', methods=['GET', 'POST'])
@@ -101,7 +102,7 @@ def post_comment():
 	return jsonify({'comm': comm })
 
 #deleting comments
-@app.route('/api/v1/remove_post/<int:post_id>', methods=['DELETE'])
+@app.route('/api/v1/remove_post/<int:_id>', methods=['DELETE'])
 def delete_comment():
 	comm = [comm for comm in comments if comm['post_id']]
 	if len(comm) == 0:
