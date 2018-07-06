@@ -1,19 +1,15 @@
-from flask import Flask, jsonify, render_template, session, request, url_for, flash, redirect
+from flask import Flask, jsonify, render_template, request, url_for, flash, redirect
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from flask import make_response
-import jwt
-
+#import jwt
 from functools import wraps
-#from flask_httpauth import HTTPBasicAuth
 
-#auth = HTTPBasicAuth()
+
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'refuge'
+app.secret_key = "refuge wise"
 
-user1 =  'musa'
-pass1  =  'musa'
 
 registers = [
 		{
@@ -44,6 +40,7 @@ comments = [
 
 
 
+
 # Validates logged in user with session
 def login_required(f):
 	@wraps(f)
@@ -61,33 +58,11 @@ def login_required(f):
 		return f(*args, **kwargs)
 	return validete
 
+
 #home route
-@app.route('/', methods=['POST'])
-def login():
-    user2 = request.get_json(force=True)['user']
-    pass2 = request.get_json(force=True)['pass']
-    valid = 0
-
-    if (user2 == ""):
-      status = 000000
-      valid = 1
-      return jsonify({'message' : 'Username cannot be blank', 'status' : status})
-    
-
-    if (valid == 0):
-            if (user1 == str(user2)):
-                if (pass1 == pass2):
-                    status = 200
-                    token = jwt.encode({'user' : user1, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, app.config['SECRET_KEY'])
-                    return jsonify({'message' : 'Login successful', 'status' : status, 'access-token' : token.decode('UTF-8')})
-                else:
-                    status = 401
-                    return jsonify({'message' : 'Username and password do not match', 'status' : status})
-
-            else:
-                status = 501
-                return jsonify({'message' : 'No such user', 'status' : status})
-
+@app.route('/', methods=['GET'])
+def index():
+	return jsonify({'message': 'Welcome to our system'})
 
 #User Register 
 @app.route('/api/auth/register',  methods=['POST'])
@@ -103,23 +78,32 @@ def register():
 	registers.append(users)
 	return jsonify({'message': 'Successfully Registered'}),201
 
-#User login
-@app.route('/api/auth/login', methods=['GET', 'POST'])
-def loging():
-	error = None
-	if request.method == 'POST':
+def login_auth(username, password):
+	if username in registers:
+		if password == registers[username]["password"]:
+			return True
+	return False
 
-		username = request.form['username']
-		password = request.form['password']
-		if username in registers:
-			if password == registers[username["password"]]:
-				session["logged_in"] = True
-				return jsonify({"message": "Successfully Logged In"})
-		return jsonify({"message": "Wrong Username and password"})
+
+
+#User login
+@app.route('/api/v1/login', methods=['GET','POST'])
+def login():
+
+  username=request.get_json()["username"]
+  password=request.get_json()["password"]
+  if login_auth(username, password):
+
+    token = jwt.encode({'username' : username, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+    return jsonify({'message' : 'Login successful', 'token' : token.decode('UTF-8')})
+  else: 
+
+	return jsonify({'meassage' : 'you are not succesfully logged in'})
 
 
 # Post comment
 @app.route('/api/v1/post-comment', methods=['GET', 'POST'])
+@login_required
 def post_comment():
 	comm = {
 		'post_id': comments[-1]['post_id'] + 1,
@@ -131,6 +115,7 @@ def post_comment():
 
 #deleting comments
 @app.route('/api/v1/remove_post/<int:comments_id>', methods=['DELETE'])
+@login_required
 def delete_comment():
 	comm = [comm for comm in comments if comm['post_id']]
 	if len(comm) == 0:
@@ -141,11 +126,13 @@ def delete_comment():
 
 
 @app.route('/api/v1/view_comment', methods=['GET'])
+@login_required
 def veiw_comment():
 	return jsonify({'comments': comments })
 
 # User Account
 @app.route('/api/v1/account', methods=['GET'])
+@login_required
 def user_account():
 	return jsonify({'registers': registers })
 
@@ -153,6 +140,7 @@ def user_account():
 
 #User Logout
 @app.route('/logout')
+@login_required
 def logout():
 	session.pop('logged_in', None)
 	return redirect(url_for('login'))
