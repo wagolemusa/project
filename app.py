@@ -1,16 +1,16 @@
 from flask import Flask, request,flash,redirect, url_for, session, logging, jsonify
 from datetime import datetime
-from flask_marshmallow import Marshmallow
 from passlib.hash import sha256_crypt
+from flask_marshmallow import Marshmallow
+
 from flask_bcrypt import Bcrypt
 import json
 import os
 #from flask.ext.bcrypt import Bcrypt
-
 from flask_sqlalchemy import SQLAlchemy 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:refuge@localhost/wies'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:refuge@localhost/python'
 app.secret_key = "refuge"
 
 db = SQLAlchemy(app)
@@ -38,11 +38,12 @@ class Comments(db.Model):
 	def __init__(self,comment):
 		self.comment = comment
 		#self.user_id = user_id
+class CommentSchema(ma.Schema):
+	class Meta:
+		field = ('comment')
 
-
-	def __repr_(self):
-		return '<Comments {}>'.format(self.comment)
-
+comm_schema = CommentSchema()
+comm_schema = CommentSchema(many=True)
 
 class Users(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -53,8 +54,6 @@ class Users(db.Model):
 	active = db.Column(db.Boolean())
 	confirm_password = db.Column(db.String(120))
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-	
-
 
 	def __init__(self, full_name, username, email, password, confirm_password):
 		self.full_name = full_name
@@ -123,19 +122,25 @@ def post():
 
 #View comments
 @app.route('/api/v1/view_post', methods=['GET'])
-def veiw_post(id):
-	comment = Comments.query.all(id)
-	return comment
+def veiw_post():
+	all_comment = Comments.query.all()
+	response = comm_schema.dump(all_comment)
+	return jsonify(response.data)
 
 #view Users details 
 @app.route("/api/v1/get_all_user", methods=["GET"])
 def get_all_user():
 	all_users = Users.query.all()
-	result = all_users
-	return jsonify(result.data)
+	response = user_schema.dump(all_users)
+	return jsonify(response.data)
 
-
-
+#Delete Comment
+@app.route('/api/v1/delete_comment/<id>', methods=['DELETE'])
+def delete_comment(id):
+	comment = Comments.query.get(id)
+	db.session.delete(user)
+	db.session.commit()
+	return jsonify(comment)
 
 if __name__ =="__main__":
 	app.run()
