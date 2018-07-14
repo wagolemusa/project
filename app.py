@@ -1,17 +1,18 @@
-from flask import Flask, request,flash,redirect, url_for, session, logging, jsonify
+from flask import Flask, request,logging, jsonify
 from datetime import datetime
 from passlib.hash import sha256_crypt
 from flask_marshmallow import Marshmallow
-
+from functools	import wraps
 from flask_bcrypt import Bcrypt
 import json
 import os
-#from flask.ext.bcrypt import Bcrypt
+import jwt
 from flask_sqlalchemy import SQLAlchemy 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:refuge@localhost/python'
-app.secret_key = "refuge"
+
+app..config['SECRET_KEY'] 'refuge'
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -20,15 +21,15 @@ ma = Marshmallow(app)
 #Cheack if user loggged_in
 def is_logged_in(f):
 	@wraps(f)
-	def wrap(*args, **kwargs):
-		#toke = request.args.get('token')
-		if 'logged_in' in session:
-			return f(*args, **kwargs)
-		else:
-			flash('Unauthorized, Please login', 'danger')
-			return redirect(url_for('login'))
-	return wrap
-
+	def decorated(*args, **kwargs):
+		if request.args.get('token')=='':
+			return jsonify({"message": 'You need to first Login'})
+		try:
+			data=jwt.decode(request.args.get('token'), app.config['SECRET_KEY'])
+		except:
+			return jsonify({"Alert":'please login again'})
+		return f(*args, **kwargs)
+	return decorated
 
 class Comments(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -74,6 +75,7 @@ user_schema = UserSchema(many=True)
 @app.route('/')
 def home():
 	return jsonify({'message':'Welcome to the System'}) 
+
 #register routes
 @app.route('/api/v1/register', methods=['POST'])
 def register():
@@ -98,15 +100,22 @@ def register():
 #loggin routes
 @app.route('/api/v1/login', methods=['GET', 'POST'])
 def login():
-	json_data = request.json
-	user = Users.query.filter_by(email=json_data['email']).first()
-	user.password, json_data['password']
-	session['logged_in'] = True
-	status = True
-	return jsonify({'result': status})
-
+	user = Users(
+		username = request.get_json()['username']
+		password = request.get_json()['password']
+		)
+		if username == user[0]['username']:
+			if password == user[0]['password']:
+				token = jwt.encode({"username":username, "passwaord":password, "exp":datetime.datetime.utcnow()+datetime.timedelta(minutes=20)},app.config['SECRET_KEY'])
+				return  jsonify({"token":token.decode('utf-8')})
+			else:
+				return jsonify({"message": "Invalid credentials"})
+		else:
+			return jsonify({"message":"Invalid credentials"})
+	
 #post comments
 @app.route('/api/v1/post_comment', methods=['POST'])
+@is_logged_in
 def post():
 	comm = Comments(
 		request.form['comment']
@@ -122,6 +131,7 @@ def post():
 
 #View comments
 @app.route('/api/v1/view_post', methods=['GET'])
+@is_logged_in
 def veiw_post():
 	all_comment = Comments.query.all()
 	response = comm_schema.dump(all_comment)
@@ -129,6 +139,7 @@ def veiw_post():
 
 #view Users details 
 @app.route("/api/v1/get_all_user", methods=["GET"])
+@is_logged_in
 def get_all_user():
 	all_users = Users.query.all()
 	response = user_schema.dump(all_users)
@@ -136,9 +147,10 @@ def get_all_user():
 
 #Delete Comment
 @app.route('/api/v1/delete_comment/<id>', methods=['DELETE'])
+#@is_logged_in
 def delete_comment(id):
 	comment = Comments.query.get(id)
-	db.session.delete(user)
+	db.session.delete(comment)
 	db.session.commit()
 	return jsonify(comment)
 
