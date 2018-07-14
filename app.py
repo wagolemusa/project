@@ -12,7 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:refuge@localhost/python'
 
-app..config['SECRET_KEY'] 'refuge'
+app.config['SECRET_KEY']='refuge'
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -101,17 +101,17 @@ def register():
 @app.route('/api/v1/login', methods=['GET', 'POST'])
 def login():
 	user = Users(
-		username = request.get_json()['username']
+		username = request.get_json()['username'],
 		password = request.get_json()['password']
-		)
-		if username == user[0]['username']:
-			if password == user[0]['password']:
-				token = jwt.encode({"username":username, "passwaord":password, "exp":datetime.datetime.utcnow()+datetime.timedelta(minutes=20)},app.config['SECRET_KEY'])
-				return  jsonify({"token":token.decode('utf-8')})
-			else:
-				return jsonify({"message": "Invalid credentials"})
+	)
+	if username == user[0]['username']:
+		if password == user[0]['password']:
+			token = jwt.encode({"username":username, "passwaord":password, "exp":datetime.datetime.utcnow()+datetime.timedelta(minutes=20)},app.config['SECRET_KEY'])
+			return  jsonify({"token":token.decode('utf-8')})
 		else:
-			return jsonify({"message":"Invalid credentials"})
+			return jsonify({"message": "Invalid credentials"})
+		else:
+	return jsonify({"message":"Invalid credentials"})
 	
 #post comments
 @app.route('/api/v1/post_comment', methods=['POST'])
